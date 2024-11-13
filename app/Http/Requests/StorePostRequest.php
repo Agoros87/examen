@@ -14,7 +14,6 @@ class StorePostRequest extends FormRequest
     {
         return true;
     }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -28,29 +27,14 @@ class StorePostRequest extends FormRequest
             'published_at' => 'nullable|date',
             'summary' => 'required|max:50',
             'status' => 'required|in:published,draft,archived,pending',
-            'reading_time' => 'required|integer|min:1|max:60',
-            'slug' => 'required|string' // Add validation for slug
+            'reading_time' => 'required|integer|min:1|max:60'
         ];
     }
-
 
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'slug' => Str::slug($this->title),
+            'slug' => Str::snake($this->title),
         ]);
-    }
-
-
-    public function validated($key = null, $default = null): array
-    {
-        $validated = parent::validated();
-
-
-        if (!isset($validated['slug'])) {
-            $validated['slug'] = Str::slug($validated['title']);
-        }
-
-        return $validated;
     }
 }
