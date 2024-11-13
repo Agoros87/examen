@@ -42,6 +42,7 @@ class PostController extends Controller
 
     public function edit(Post $post)
     {
+
         return view('posts.edit', compact('post'));
     }
 
@@ -55,10 +56,15 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
-        $post->delete();
+        if($post->status == 'draft' || $post->status == 'pending') {
+            $post->delete();
+            return to_route('posts.index')
+                ->with('status', 'Post deleted successfully');
+        }
+
 
         return to_route('posts.index')
-            ->with('status', 'Post deleted successfully');
+            ->with('status', 'No puedes eliminar un post publicado');
     }
 
     public function userPosts()
